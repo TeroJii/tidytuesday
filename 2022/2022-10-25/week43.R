@@ -12,22 +12,31 @@ library(here)
 library(tidyverse)
 library(showtext)
 library(ggimage)
+library(patchwork)
+library(maps)
 
 # define project paths
 here::i_am(path = "2022/2022-10-25/week43.R")
 
+#############
+## Creating the visualization -----
+#######
 
-## Visualizations -----
 
 ## Get fonts
-font_add_google("Lora")
+font_add_google("Cinzel")
 # add font automatically
 showtext_auto()
 
 
+## Texts ----
+
 ### Picture attribution
 # star
-attribution_star <- "I, Ssolbergj, CC BY 3.0 <https://creativecommons.org/licenses/by/3.0>, via Wikimedia Commons"
+attribution_star <- "Star figure: I, Ssolbergj, CC BY 3.0 <https://creativecommons.org/licenses/by/3.0>,\n via Wikimedia Commons"
+main_title <- "Great British Bakeoff:"
+sub_title <- "Do the winners grow during the competition?"
+info_text <- "#TidyTuesday week 43, 2022 | Data: {bakeoff} package | @JalkanenTero"
 
 
 # get season winners
@@ -36,8 +45,34 @@ series_winners <- bakers %>%
   filter(series_winner == 1)
 
 ## label series
-series.label <- paste("Series", 1:10)
-names(series.label) <- 1:10
+series.label <- series_winners$baker
+names(series.label) <-series_winners$series
+
+
+### Colors ---
+
+font_color <- "#FFFFFF"
+bg_color <- "#006666"
+
+## Theme -----
+
+plot_theme <- theme(plot.background = element_rect(fill = bg_color), 
+                    axis.line = element_blank(), 
+                    panel.background = element_rect(fill = bg_color), 
+                    panel.grid = element_blank(), 
+                    strip.background = element_blank(), 
+                    axis.text.x = element_text(color = font_color, size = 40),
+                    axis.ticks.x = element_line(color = font_color, size = 50),
+                    strip.text = element_text(color = font_color, size = 50),
+                    axis.text.y = element_blank(),
+                    axis.ticks.y = element_blank(),
+                    axis.title = element_blank(),
+                    plot.caption = element_text(color = font_color, face = "bold", size = 15),
+                    plot.title = element_text(color = font_color, face = "bold", size = 105, hjust = 0.5),
+                    plot.subtitle = element_text(color = font_color, face = "italic", size = 95, hjust = 0.5)
+                    
+)
+
 
 
 # How did season winners fare in challenges?
@@ -48,31 +83,47 @@ season_winner_progression <- challenges %>%
   mutate(technical = if_else(is.na(technical), true = 1, false = technical))
 
 
-season_winner_progression %>% 
+main_chart <- season_winner_progression %>% 
   ggplot(aes(x = episode, y = technical/2)) +
   geom_tile(width = 0.8, 
             aes(height = technical),
             # White filling on bars
-            fill = "#FFFFFF") +
-  geom_image(data = season_winner_progression %>% filter(result == "STAR BAKER") %>%  mutate(image = here("2022", "2022-10-25", "star.png")), 
+            fill = font_color) +
+  geom_image(data = season_winner_progression %>% 
+               filter(result == "STAR BAKER") %>%  
+               mutate(image = here("2022", "2022-10-25", "star.png")), 
              aes(image = image, y = technical + 1, x = episode), size = 0.05) +
   geom_text(data = season_winner_progression %>% filter(result == "WINNER"), 
-             aes(label = result, y = technical + 3, x = episode), 
+             aes(label = strsplit(result, split = "NER"), y = technical + 2, x = episode), 
             angle = 90,
-            color = "#FFFFFF") +
+            color = font_color,
+            size = 20) +
   facet_wrap(facets = "series", nrow = 2,
              # Add labels on facets
              labeller = labeller(series = series.label)) +
   scale_y_continuous(breaks = 1:12) +
   scale_x_continuous(breaks = 1:10) +
-  theme(plot.background = element_rect(fill = "#006666"), 
-        axis.line = element_blank(), 
-        panel.background = element_rect(fill = "#006666"), 
-        panel.grid = element_blank(), 
-        strip.background = element_blank(), 
-        axis.text.x = element_text(colour = "#FFFFFF"),
-        axis.ticks.x = element_line(colour = "#FFFFFF"),
-        strip.text = element_text(colour = "#FFFFFF"),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank()
-        )
+  plot_theme +
+  labs(caption = attribution_star) +
+  ggtitle(main_title, subtitle = paste0(sub_title, "\n")) +
+  theme(axis.title.y = element_text(color = font_color, size = 50)) +
+  labs(y = "Technical scoring per episode")
+
+
+sub_plot <- ggplot() +
+  geom_text(data = data.frame(x = 0, y = 0, label = info_text), aes(x = x, y= y, label = label), color = font_color, size = 10) +
+  plot_theme +
+  theme(axis.text.x = element_blank(), 
+        axis.ticks.x = element_blank())
+
+
+main_chart / sub_plot + plot_layout(nrow = 2, heights = c(15,1))
+
+
+ggsave(filename = "TidyTuesday-2022-Week43.png", 
+       path = here("2022", "2022-10-25"), 
+       device = "png", 
+       units = "cm", 
+       height = 25,
+       width = 30, 
+       dpi = 300)
