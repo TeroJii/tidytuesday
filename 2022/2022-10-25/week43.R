@@ -13,7 +13,6 @@ library(tidyverse)
 library(showtext)
 library(ggimage)
 library(patchwork)
-library(maps)
 
 # define project paths
 here::i_am(path = "2022/2022-10-25/week43.R")
@@ -74,6 +73,7 @@ plot_theme <- theme(plot.background = element_rect(fill = bg_color),
 )
 
 
+## Modify data -----
 
 # How did season winners fare in challenges?
 season_winner_progression <- challenges %>% 
@@ -82,6 +82,8 @@ season_winner_progression <- challenges %>%
   filter(!(series == 1 & baker == "David")) %>% 
   mutate(technical = if_else(is.na(technical), true = 1, false = technical))
 
+
+## The plots --------
 
 main_chart <- season_winner_progression %>% 
   ggplot(aes(x = episode, y = technical/2)) +
@@ -119,6 +121,8 @@ sub_plot <- ggplot() +
 
 main_chart / sub_plot + plot_layout(nrow = 2, heights = c(15,1))
 
+
+## Save output -----
 
 ggsave(filename = "TidyTuesday-2022-Week43.png", 
        path = here("2022", "2022-10-25"), 
