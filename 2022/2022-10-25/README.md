@@ -7,4 +7,4 @@ The data this week comes from the [`bakeoff` package](https://bakeoff.netlify.ap
 
 
 
-* `star.png` image was used to indicate epidodes where the contestant was elected as the star baker. The image is attributed to `I, Ssolbergj, CC BY 3.0 <https://creativecommons.org/licenses/by/3.0>,\n via Wikimedia Commons`
+* `star.png` image was used to indicate epidodes where the contestant was elected as the star baker. The image is attributed to `I, Ssolbergj, CC BY 3.0 <https://creativecommons.org/licenses/by/3.0>, via Wikimedia Commons`
