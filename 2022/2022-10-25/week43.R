@@ -26,13 +26,13 @@ here::i_am(path = "2022/2022-10-25/week43.R")
 font_add_google("Cinzel")
 # add font automatically
 showtext_auto()
-
+family <- "Cinzel"
 
 ## Texts ----
 
 ### Picture attribution
 # star
-attribution_star <- "Star figure: I, Ssolbergj, CC BY 3.0 <https://creativecommons.org/licenses/by/3.0>,\n via Wikimedia Commons"
+attribution_star <- "Star figure: I, Ssolbergj, CC BY 3.0 <https://creativecommons.org/licenses/by/3.0>, via Wikimedia Commons"
 main_title <- "Great British Bakeoff:"
 sub_title <- "Do the winners grow during the competition?"
 info_text <- "#TidyTuesday week 43, 2022 | Data: {bakeoff} package | @JalkanenTero"
@@ -60,15 +60,15 @@ plot_theme <- theme(plot.background = element_rect(fill = bg_color),
                     panel.background = element_rect(fill = bg_color), 
                     panel.grid = element_blank(), 
                     strip.background = element_blank(), 
-                    axis.text.x = element_text(color = font_color, size = 40),
+                    axis.text.x = element_text(color = font_color, size = 40, family = family),
                     axis.ticks.x = element_line(color = font_color, size = 50),
-                    strip.text = element_text(color = font_color, size = 50),
+                    strip.text = element_text(color = font_color, size = 50, family = family),
                     axis.text.y = element_blank(),
                     axis.ticks.y = element_blank(),
                     axis.title = element_blank(),
-                    plot.caption = element_text(color = font_color, face = "bold", size = 15),
-                    plot.title = element_text(color = font_color, face = "bold", size = 105, hjust = 0.5),
-                    plot.subtitle = element_text(color = font_color, face = "italic", size = 95, hjust = 0.5)
+                    plot.caption = element_text(color = font_color, face = "bold", size = 15, family = family),
+                    plot.title = element_text(color = font_color, face = "bold", size = 105, hjust = 0.5, family = family),
+                    plot.subtitle = element_text(color = font_color, face = "italic", size = 95, hjust = 0.5, family = family)
                     
 )
 
@@ -99,7 +99,8 @@ main_chart <- season_winner_progression %>%
              aes(label = strsplit(result, split = "NER"), y = technical + 2, x = episode), 
             angle = 90,
             color = font_color,
-            size = 20) +
+            size = 20, 
+            family = family) +
   facet_wrap(facets = "series", nrow = 2,
              # Add labels on facets
              labeller = labeller(series = series.label)) +
@@ -108,12 +109,13 @@ main_chart <- season_winner_progression %>%
   plot_theme +
   labs(caption = attribution_star) +
   ggtitle(main_title, subtitle = paste0(sub_title, "\n")) +
-  theme(axis.title.y = element_text(color = font_color, size = 50)) +
+  theme(axis.title.y = element_text(color = font_color, size = 50, family = family)) +
   labs(y = "Technical scoring per episode")
 
 
 sub_plot <- ggplot() +
-  geom_text(data = data.frame(x = 0, y = 0, label = info_text), aes(x = x, y= y, label = label), color = font_color, size = 10) +
+  geom_text(data = data.frame(x = 0, y = 0, label = info_text), 
+            aes(x = x, y= y, label = label), color = font_color, size = 10, family = family) +
   plot_theme +
   theme(axis.text.x = element_blank(), 
         axis.ticks.x = element_blank())
@@ -124,7 +126,7 @@ main_chart / sub_plot + plot_layout(nrow = 2, heights = c(15,1))
 
 ## Save output -----
 
-ggsave(filename = "TidyTuesday-2022-Week43.png", 
+ggsave(filename = "TidyTuesday-2022-Week43_v2.png", 
        path = here("2022", "2022-10-25"), 
        device = "png", 
        units = "cm", 
