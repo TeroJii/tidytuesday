@@ -10,6 +10,8 @@ library(tidyverse)
 library(showtext)
 library(ggimage)
 library(patchwork)
+library(tidytext)
+
 
 # define project paths
 here::i_am(path = "2022/2022-10-25/week44.R")
@@ -61,8 +63,13 @@ plot_theme <- theme(plot.background = element_rect(fill = bg_color),
 
 
 ## Modify data -----
+finnish_movies <- horror_movies %>% 
+  filter(original_language == "fi")
 
-
+tidy_overviews <- finnish_movies %>% 
+  select(original_title, overview) %>% 
+  filter(!is.na(overview)) %>% 
+  unnest_tokens(word, input = overview)
 
 ## The plots --------
 
