@@ -14,7 +14,7 @@ library(tidytext)
 
 
 # define project paths
-here::i_am(path = "2022/2022-10-25/week44.R")
+here::i_am(path = "2022/2022-11-01/week44.R")
 
 #############
 ## Creating the visualization -----
@@ -22,10 +22,12 @@ here::i_am(path = "2022/2022-10-25/week44.R")
 
 
 ## Get fonts
-font_add_google("Cinzel")
+font_add_google("Frijole")
+font_add_google("Kolker Brush")
 # add font automatically
 showtext_auto()
-family <- "Cinzel"
+family_title <- "Frijole"
+family_other <- "Kolker Brush"
 
 ## Texts ----
 
@@ -39,26 +41,17 @@ info_text <- "#TidyTuesday week 44, 2022 | Data: https://github.com/tashapiro/ho
 
 ### Colors ---
 
-font_color <- "#FFFFFF"
-bg_color <- "#006666"
+font_color <- "#ff0000"
+bg_color <- "#000000"
 
 ## Theme -----
 
-plot_theme <- theme(plot.background = element_rect(fill = bg_color), 
-                    axis.line = element_blank(), 
-                    panel.background = element_rect(fill = bg_color), 
-                    panel.grid = element_blank(), 
-                    strip.background = element_blank(), 
-                    axis.text.x = element_text(color = font_color, size = 40, family = family),
-                    axis.ticks.x = element_line(color = font_color, size = 50),
-                    strip.text = element_text(color = font_color, size = 50, family = family),
-                    axis.text.y = element_blank(),
-                    axis.ticks.y = element_blank(),
-                    axis.title = element_blank(),
-                    plot.caption = element_text(color = font_color, face = "bold", size = 15, family = family),
-                    plot.title = element_text(color = font_color, face = "bold", size = 105, hjust = 0.5, family = family),
-                    plot.subtitle = element_text(color = font_color, face = "italic", size = 95, hjust = 0.5, family = family)
-                    
+plot_theme <- theme(axis.text = element_text(color = font_color, size = 40, family = family_other),
+                    plot.caption = element_text(color = font_color, face = "bold", size = 15, family = family_other),
+                    plot.title = element_text(color = font_color, face = "bold", size = 105, hjust = 0.5, family = family_title),
+                    plot.subtitle = element_text(color = font_color, face = "italic", size = 95, hjust = 0.5, family = family_other),
+                    plot.background = element_rect(fill = bg_color),
+                    panel.background = element_rect(fill = bg_color)
 )
 
 
@@ -73,3 +66,8 @@ tidy_overviews <- finnish_movies %>%
 
 ## The plots --------
 
+data.frame(x = 1:10, y =1:10) %>% 
+  ggplot(aes(x,y)) +
+  geom_point(color = font_color) +
+  ggtitle("Test", subtitle = "test test") +
+  plot_theme
