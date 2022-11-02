@@ -5,5 +5,5 @@
 
 Read more about Tanya's workshop on her GitHub: [Horror Movies](https://github.com/tashapiro/horror-movies)
 
-<!--- ![](TidyTuesday-2022-Week44.png) --->
+![](TidyTuesday-2022-Week44.png)
 
