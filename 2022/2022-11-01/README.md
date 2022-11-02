@@ -5,5 +5,11 @@
 
 Read more about Tanya's workshop on her GitHub: [Horror Movies](https://github.com/tashapiro/horror-movies)
 
+
+## Finnish horror movies vs. Iron Maiden's Fear of the Dark
+
+This week I compared the overview texts of selected Finnish horror movies to the lyrics of Iron Maiden's iconic Fear of the Dark:
+
+
 ![](TidyTuesday-2022-Week44.png)
 
