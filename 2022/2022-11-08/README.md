@@ -14,5 +14,5 @@ This week I made my first ever cartogram, which shows the amount of radio statio
 I took the population of different states from Wikipedia.
 
 
-[](TidyTuesday-2022-Week45.png)
+![](TidyTuesday-2022-Week45.png)
 
