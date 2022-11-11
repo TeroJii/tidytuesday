@@ -4,16 +4,14 @@
 
 ## Libraries ----
 
+library(showtext)
 library(here)
 library(tidyverse)
 library(patchwork)
 library(rvest)
-
-
-#library(ggmap)
 library(statebins)
-#library(sf)
-
+library(gt)
+library(gtExtras)
 
 # define project paths
 here::i_am(path = "2022/2022-11-08/week45.R")
@@ -54,7 +52,7 @@ states_pop <- tibble("state" = pop_table_states, "population" = pop_table_pop[,3
   # remove commas from population and make numeric
   mutate(population = gsub(pattern = ",", replacement = "", x = population) %>% as.numeric()) %>% 
   # remove whitespace from the beginning of state name
-  mutate(state = stringr::str_trim(string = states_pop$state, side = "left"))
+  mutate(state = stringr::str_trim(string = state, side = "left"))
 
 
 ## Modify data -----
@@ -75,51 +73,51 @@ states_radio_density <- state_stations %>%
 #######
 
 ## Get fonts
-font_add_google("Frijole")
-font_add_google("Kolker Brush")
+font_add_google("Black Ops One")
+font_add_google("Gruppo")
 # add font automatically
 showtext_auto()
-family_title <- "Frijole"
-family_other <- "Kolker Brush"
+family_title <- "Black Ops One"
+family_other <- "Gruppo"
 
 ## Texts ----
 
 ### Picture attribution
 # star
 
-main_title <- "Place holder"
-sub_title <- "nnn"
-info_text <- "#TidyTuesday week 45, 2022 | Data: DATACREDIT | @JalkanenTero"
+main_title <- "Radio Stations in Different States"
+info_text <- "#TidyTuesday week 45, 2022 | Data: from Wikipedia by @frankiethull and @erindataviz | Viz: @JalkanenTero"
 
 
 ### Colors ---
 
-font_color <- "#ff0000"
-bg_color <- "#000000"
-
-
-## Theme -----
-
-plot_theme <- theme(axis.text = element_text(color = font_color, size = 50, family = family_other),
-                    axis.title = element_text(color = font_color, size = 45, family = family_other),
-                    plot.caption = element_text(color = font_color, face = "bold", size = 45, family = family_other),
-                    plot.title = element_text(color = font_color, face = "bold", size = 40, hjust = 0.5, family = family_title, lineheight = 0.5),
-                    plot.background = element_rect(fill = bg_color),
-                    panel.background = element_rect(fill = bg_color),
-                    strip.background = element_rect(fill = bg_color),
-                    strip.text = element_text(family = family_other, color = font_color, size = 50)
-)
-
+font_color <- "#000000"
 
 
 ## The plots --------
 
-states_radio_density %>% 
-  statebins(value_col="radio_station_density") +
+title_plot <- ggplot() +
+  geom_text(data = data.frame(x = 0, y = 0, label = main_title), 
+            aes(x = x, y= y, label = label), color = font_color, size = 25, family = family_title) +
+  theme_void() +
+  theme(axis.text.x = element_blank(), 
+        axis.ticks.x = element_blank(), text = element_text(face = "bold"))
+
+map_plot <- states_radio_density %>% 
+  statebins(value_col="radio_station_density", font_size = 12) +
   theme_statebins(legend_position="bottom") +
   viridis::scale_fill_viridis(option = "A") +
-  labs(fill = "Density of stations per 1000 inhabitants")
+  labs(fill = "Density of stations per 1000 inhabitants") +
+  theme(text = element_text(size = 20, family = family_other))
 
+sub_plot <- ggplot() +
+  geom_text(data = data.frame(x = 0, y = 0, label = info_text), 
+            aes(x = x, y= y, label = label), color = font_color, size = 10, family = family_other) +
+  theme_void() +
+  theme(axis.text.x = element_blank(), 
+        axis.ticks.x = element_blank())
+
+title_plot + map_plot + sub_plot + plot_layout(nrow = 3, heights = c(2.5,17,0.5))
 
 ## Save output -----
 
@@ -128,5 +126,5 @@ ggsave(filename = "TidyTuesday-2022-Week45.png",
        device = "png", 
        units = "cm", 
        height = 15,
-       width = 15, 
+       width = 20, 
        dpi = 300)
