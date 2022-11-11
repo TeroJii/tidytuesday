@@ -6,12 +6,13 @@ The dataset included was mined from all 50 states, tidying column names, binding
 
 [Erin's](https://twitter.com/erindataviz) blogpost on [Visualizing the Geography of FM Radio](https://erdavis.com/2020/01/04/visualizing-the-geography-of-fm-radio/). Data sourced from [FCC](https://www.fcc.gov/media/radio/fm-service-contour-data-points).
 
-Credit: [Frank Hull](twitter.com/frankiethull)
+Credit: [Frank Hull](twitter.com/frankiethull) and [Erin](https://twitter.com/erindataviz)
 
-## Plot to be
+## Density of radio stations
 
-This week I will try something...
+This week I made my first ever cartogram, which shows the amount of radio stations per 1000 inhabitants in different US states.
+I took the population of different states from Wikipedia.
 
 
-<!--- ![](TidyTuesday-2022-Week44.png) --->
+[](TidyTuesday-2022-Week45.png)
 
