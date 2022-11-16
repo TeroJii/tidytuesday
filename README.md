@@ -7,6 +7,7 @@ My contributions to the [Tidy Tuesday](https://github.com/rfordatascience/tidytu
 
 ### Week 46 - Page Metrics
 
+![](/2022/2022-11-15/TidyTuesday-2022-Week46.png)
 
 ### Week 45 - Radio Stations
 

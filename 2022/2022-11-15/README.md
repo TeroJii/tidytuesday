@@ -8,10 +8,10 @@ Full data available via instructions at: <https://github.com/HTTPArchive/httparc
 
 ## My contribution
 
-...
+This week I explored the accessibility of mobile websites.
 
 
-<!--- ![](TidyTuesday-2022-Week46.png) --->
+![](TidyTuesday-2022-Week46.png)
 
 
 
