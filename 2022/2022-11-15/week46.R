@@ -7,6 +7,8 @@
 library(here)
 library(tidyverse)
 library(patchwork)
+library(showtext)
+library(lubridate)
 
 # define project paths
 here::i_am(path = "2022/2022-11-15/week46.R")
@@ -22,6 +24,26 @@ ally_scores <- readr::read_csv('https://raw.githubusercontent.com/rfordatascienc
 bytes_total <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-11-15/bytes_total.csv')
 speed_index <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-11-15/speed_index.csv')
 
+
+## Fix dates on all data.frames
+fix_dates <- function(df){
+  
+  df <- df %>% 
+    mutate(date = str_replace_all(string = date, pattern = "_", replacement = "-")) %>% 
+    mutate(date = lubridate::as_date(date))
+    
+  
+  return(df)
+}
+
+data_frames_list = list(image_alt, color_contrast, ally_scores, bytes_total, speed_index) %>% 
+  stats::setNames(nm = c("image_alt", "color_contrast", "ally_scores", "bytes_total", "speed_index"))
+
+
+data_frames_list <- map(.x = data_frames_list, ~fix_dates(df = .x))
+
+# remove "old" dfs with character strings as dates
+rm("image_alt", "color_contrast", "ally_scores", "bytes_total", "speed_index")
 
 #############
 ## Creating the visualization -----
