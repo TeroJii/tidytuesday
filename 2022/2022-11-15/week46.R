@@ -51,77 +51,76 @@ rm("image_alt", "color_contrast", "ally_scores", "bytes_total", "speed_index")
 #######
 
 ## Get fonts
-font_add_google("Black Ops One")
-font_add_google("Gruppo")
+font_add_google("Kanit")
+font_add_google("Quicksand")
 # add font automatically
 showtext_auto()
-family_title <- "Black Ops One"
-family_other <- "Gruppo"
+family_title <- "Kanit"
+family_other <- "Quicksand"
 
 ## Texts ----
 
 ### Picture attribution
 
 main_title <- "Page Metrics"
+sub_title <- "Accessibility of Mobile Optimized Webpages"
 info_text <- "#TidyTuesday week 46, 2022 | Data: httparchive.org | Viz: @TeroJii"
 
 
 ### Colors ---
 
-font_color <- "#000000"
+title_color <- "#E14D2A"
+font_color <- "#FD841F"
+bg_color <- "#001253"
+  
+
+## Theme -----
+
+plot_theme <- theme(axis.text = element_text(color = font_color, size = 45, family = family_other),
+                    axis.title = element_blank(),
+                    plot.caption = element_text(color = font_color, face = "bold", size = 20, family = family_other),
+                    plot.title = element_text(color = title_color, face = "bold", size = 60, hjust = 0.5, family = family_title, lineheight = 0.5),
+                    plot.subtitle = element_text(color = font_color, face = "bold", size = 50, hjust = 0.5, family = family_other, lineheight = 0.5),
+                    plot.background = element_rect(fill = bg_color),
+                    panel.background = element_rect(fill = bg_color),
+                    strip.background = element_rect(fill = bg_color),
+                    strip.text = element_text(family = family_other, color = font_color, size = 50),
+                    panel.grid = element_blank()
+)
+
 
 
 ## The plots --------
-
-title_plot <- ggplot() +
-  geom_text(data = data.frame(x = 0, y = 0, label = main_title), 
-            aes(x = x, y= y, label = label), color = font_color, size = 25, family = family_title) +
-  theme_void() +
-  theme(axis.text.x = element_blank(), 
-        axis.ticks.x = element_blank(), text = element_text(face = "bold"))
-
-#speed
-data_frames_list$speed_index %>% 
-  pivot_longer(cols = paste0("p", c(10,25,50,75,90)), names_to = "percentile", values_to = "speed_index") %>%
-  ggplot(aes(x = date, y = speed_index, color = percentile)) +
-  geom_line() +
-  facet_grid(. ~ client)
-
-#size
-data_frames_list$bytes_total %>% 
-  pivot_longer(cols = paste0("p", c(10,25,50,75,90)), names_to = "percentile", values_to = "bytes_total") %>%
-  ggplot(aes(x = date, y = bytes_total, color = percentile)) +
-  geom_line() +
-  facet_grid(. ~ client)
-
-# accessibility
-data_frames_list$ally_scores %>% 
-  pivot_longer(cols = paste0("p", c(10,25,50,75,90)), names_to = "percentile", values_to = "ally_score") %>%
-  ggplot(aes(x = date, y = ally_score, color = percentile)) +
-  geom_line() +
-  facet_grid(. ~ client)
 
 ## Friendliness for visually impaired
 
 # alt text and color contrast
 
-vis_friend <- data_frames_list$image_alt %>% 
+vis_data <- data_frames_list$image_alt %>% 
   bind_rows(data_frames_list$color_contrast) %>% 
   # mobile phones only
   filter(client == "mobile") %>% 
   mutate(measure = if_else(measure == "a11yImageAlt", 
                            true = "Contains Alt text", 
-                           false = "Color Contrast for Optimized Viewablity")) %>% 
+                           false = "Color Contrast for Optimized Viewablity"))
+
+vis_friend <- vis_data %>% 
   ggplot(aes(x = date, y = percent, group = measure)) +
-  geom_line(size = 2) +
-  ggrepel::geom_label_repel(data = . %>% filter(date == "2017-11-01"), 
+  geom_line(color = font_color, linewidth = 1.5) +
+  ggrepel::geom_text_repel(data = . %>% filter(date == "2017-11-01"), 
                             aes(x = date, 
                                 y = percent+2.5, 
-                                label = measure)) +
-  ggtitle("Mobile optimized webpage ")
+                                label = measure),
+                           size = 15,
+                           color = font_color) +
+  ggtitle(label = main_title, subtitle = sub_title) +
+  scale_y_continuous(labels = function(percent) paste0(percent, "%")
+                     ) +
+  labs(caption = info_text) +
+  plot_theme
 
 
-title_plot + title_plot + plot_layout(nrow = 2, heights = c(1,1))
+vis_friend
 
 ## Save output -----
 
@@ -129,6 +128,6 @@ ggsave(filename = "TidyTuesday-2022-Week46.png",
        path = here("2022", "2022-11-15"), 
        device = "png", 
        units = "cm", 
-       height = 15,
+       height = 12,
        width = 20, 
        dpi = 300)
