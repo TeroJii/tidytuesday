@@ -9,6 +9,7 @@ library(tidyverse)
 library(patchwork)
 library(showtext)
 library(lubridate)
+library(ggrepel)
 
 # define project paths
 here::i_am(path = "2022/2022-11-15/week46.R")
@@ -78,6 +79,47 @@ title_plot <- ggplot() +
   theme_void() +
   theme(axis.text.x = element_blank(), 
         axis.ticks.x = element_blank(), text = element_text(face = "bold"))
+
+#speed
+data_frames_list$speed_index %>% 
+  pivot_longer(cols = paste0("p", c(10,25,50,75,90)), names_to = "percentile", values_to = "speed_index") %>%
+  ggplot(aes(x = date, y = speed_index, color = percentile)) +
+  geom_line() +
+  facet_grid(. ~ client)
+
+#size
+data_frames_list$bytes_total %>% 
+  pivot_longer(cols = paste0("p", c(10,25,50,75,90)), names_to = "percentile", values_to = "bytes_total") %>%
+  ggplot(aes(x = date, y = bytes_total, color = percentile)) +
+  geom_line() +
+  facet_grid(. ~ client)
+
+# accessibility
+data_frames_list$ally_scores %>% 
+  pivot_longer(cols = paste0("p", c(10,25,50,75,90)), names_to = "percentile", values_to = "ally_score") %>%
+  ggplot(aes(x = date, y = ally_score, color = percentile)) +
+  geom_line() +
+  facet_grid(. ~ client)
+
+## Friendliness for visually impaired
+
+# alt text and color contrast
+
+vis_friend <- data_frames_list$image_alt %>% 
+  bind_rows(data_frames_list$color_contrast) %>% 
+  # mobile phones only
+  filter(client == "mobile") %>% 
+  mutate(measure = if_else(measure == "a11yImageAlt", 
+                           true = "Contains Alt text", 
+                           false = "Color Contrast for Optimized Viewablity")) %>% 
+  ggplot(aes(x = date, y = percent, group = measure)) +
+  geom_line(size = 2) +
+  ggrepel::geom_label_repel(data = . %>% filter(date == "2017-11-01"), 
+                            aes(x = date, 
+                                y = percent+2.5, 
+                                label = measure)) +
+  ggtitle("Mobile optimized webpage ")
+
 
 title_plot + title_plot + plot_layout(nrow = 2, heights = c(1,1))
 
