@@ -23,12 +23,12 @@ museums <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/ti
 #######
 
 ## Get fonts
-font_add_google("Kanit")
-font_add_google("Quicksand")
+font_add_google("Julee")
+font_add_google("Barlow")
 # add font automatically
 showtext_auto()
-family_title <- "Kanit"
-family_other <- "Quicksand"
+family_title <- "Julee"
+family_other <- "Barlow"
 
 ## Texts ----
 
