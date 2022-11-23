@@ -9,6 +9,9 @@ library(tidyverse)
 library(patchwork)
 library(showtext)
 library(lubridate)
+library(tmap)
+library(sf)
+library(spData)
 
 # define project paths
 here::i_am(path = "2022/2022-11-15/week46.R")
@@ -63,6 +66,13 @@ plot_theme <- theme(axis.text = element_text(color = font_color, size = 45, fami
 
 
 ## The plots --------
+
+gb <- world %>% filter(grepl(pattern = "united kingdom", x = name_long, ignore.case = TRUE))
+
+tm_shape(gb) +
+  tm_fill() +
+  tm_borders() + 
+  tm_layout(main_title, inner.margins=c(0.2,0.2,0.2,0.2), title.size=.8)
 
 
 ## Save output -----
