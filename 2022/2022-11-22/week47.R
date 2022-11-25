@@ -8,10 +8,7 @@ library(here)
 library(tidyverse)
 library(patchwork)
 library(showtext)
-library(lubridate)
-library(tmap)
-library(sf)
-library(spData)
+library(maps)
 
 # define project paths
 here::i_am(path = "2022/2022-11-15/week46.R")
@@ -51,7 +48,7 @@ bg_color <- "#001253"
 
 ## Theme -----
 
-plot_theme <- theme(axis.text = element_text(color = font_color, size = 45, family = family_other),
+plot_theme <- theme(axis.text = element_blank(),
                     axis.title = element_blank(),
                     plot.caption = element_text(color = font_color, face = "bold", size = 20, family = family_other),
                     plot.title = element_text(color = title_color, face = "bold", size = 60, hjust = 0.5, family = family_title, lineheight = 0.5),
@@ -67,13 +64,22 @@ plot_theme <- theme(axis.text = element_text(color = font_color, size = 45, fami
 
 ## The plots --------
 
-gb <- world %>% filter(grepl(pattern = "united kingdom", x = name_long, ignore.case = TRUE))
+worldmap <-  map_data('world')
 
-tm_shape(gb) +
-  tm_fill() +
-  tm_borders() + 
-  tm_layout(main_title, inner.margins=c(0.2,0.2,0.2,0.2), title.size=.8)
-
+ggplot() + 
+  geom_polygon(data = worldmap, aes(x = long, 
+                                    y = lat, 
+                                    group = group), 
+               fill = 'gray90', 
+               color = 'black') + 
+  coord_fixed(ratio = 1.3, 
+              xlim = c(-10,3), 
+              ylim = c(50, 59)) + 
+  geom_point(data = museums, aes(x = Longitude, y = Latitude), shape = 15, fill = "black", alpha = 0.6) +
+  theme_void() +
+  ggtitle(main_title) +
+  theme(plot.title = element_text(color = title_color, face = "bold", size = 60, hjust = 0.5, family = family_title, lineheight = 0.5)) +
+  labs(caption = info_text)
 
 ## Save output -----
 
