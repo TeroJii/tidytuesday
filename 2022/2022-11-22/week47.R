@@ -35,8 +35,8 @@ family_other <- "Barlow"
 ### Picture attribution
 
 main_title <- "Museums"
-sub_title <- "Something"
-info_text <- "#TidyTuesday week 47, 2022 | Data: Data downloaded from the Mapping Museums website at www.mappingmuseums.org, Accessed on 2022-11-22 | Viz: @TeroJii"
+sub_title <- "#TidyTuesday week 47, 2022 | Viz: @TeroJii"
+info_text <- "Data: Data downloaded from the Mapping Museums website at www.mappingmuseums.org, Accessed on 2022-11-22"
 
 
 ### Colors ---
@@ -77,8 +77,12 @@ ggplot() +
               ylim = c(50, 59)) + 
   geom_point(data = museums, aes(x = Longitude, y = Latitude), shape = 15, fill = "black", alpha = 0.6) +
   theme_void() +
-  ggtitle(main_title) +
-  theme(plot.title = element_text(color = title_color, face = "bold", size = 60, hjust = 0.5, family = family_title, lineheight = 0.5)) +
+  ggtitle(main_title, subtitle = sub_title) +
+  theme(
+    plot.title = element_text(color = title_color, face = "bold", size = 60, hjust = 0.5, family = family_title, lineheight = 0.5),
+    plot.subtitle = element_text(color = font_color, face = "bold", size = 25, hjust = 0.5, family = family_other, lineheight = 0.5),
+    plot.caption = element_text(color = font_color, face = "bold", size = 10, hjust = 0.5, family = family_other)
+    ) +
   labs(caption = info_text)
 
 ## Save output -----
